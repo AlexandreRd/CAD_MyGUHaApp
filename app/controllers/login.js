@@ -1,19 +1,19 @@
 import Controller from '@ember/controller';
+import {isBlank} from '@ember/utils';
 
 export default Controller.extend({
-    store: Ember.inject.service(),
     session: Ember.inject.service(),
     firebase: Ember.inject.service('firebaseApp'),
 
     actions: {
         iniciarSesion(){
             let email = this.get('email');
-            if (Ember.isBlank( this.get('email') ) ){
+            if (isBlank( this.get('email') ) ){
                 Materialize.toast('Introduce tu correo electrónico', 3000);
 				return;
 			}
             let password = this.get('password');
-            if (Ember.isBlank( this.get('password') ) ){
+            if (isBlank( this.get('password') ) ){
                 Materialize.toast('Introduce tu contraseña', 3000);
 				return;
 			}
@@ -23,13 +23,11 @@ export default Controller.extend({
                 email: email,
                 password: password
             }).then((user)=> {
-                let userId;
-                let userInst;
                 this.get('session').fetch().then(()=>{
-                    window.Materialize.toast('Bienvenido', 3000);
+                    //window.Materialize.toast('Bienvenido', 3000);
                     this.transitionToRoute('Dashboard');
                 }).catch(()=>{
-                    window.Materialize.toast('Bienvenido', 3000);
+                    //window.Materialize.toast('Bienvenido', 3000);
                     this.transitionToRoute('Dashboard');
                 });
                 

@@ -3,12 +3,19 @@
 
 module.exports = function(environment) {
   let ENV = {
+
     modulePrefix: 'my-guha-app',
     environment,
      rootURL: '',
     // rootURL: '/',
      locationType: 'hash',
     //locationType: 'auto',
+
+    torii: {
+      sessionServiceName: 'session'
+    },
+   
+
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

@@ -1,5 +1,13 @@
 "use strict";
 
+define('my-guha-app/adapters/application', ['exports', 'emberfire/adapters/firebase'], function (exports, _firebase) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = _firebase.default.extend({});
+});
 define('my-guha-app/app', ['exports', 'my-guha-app/resolver', 'ember-load-initializers', 'my-guha-app/config/environment'], function (exports, _resolver, _emberLoadInitializers, _environment) {
   'use strict';
 
@@ -18,6 +26,14 @@ define('my-guha-app/app', ['exports', 'my-guha-app/resolver', 'ember-load-initia
 
   exports.default = App;
 });
+define('my-guha-app/components/torii-iframe-placeholder', ['exports', 'torii/components/torii-iframe-placeholder'], function (exports, _toriiIframePlaceholder) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _toriiIframePlaceholder.default;
+});
 define('my-guha-app/components/welcome-page', ['exports', 'ember-welcome-page/components/welcome-page'], function (exports, _welcomePage) {
   'use strict';
 
@@ -30,6 +46,49 @@ define('my-guha-app/components/welcome-page', ['exports', 'ember-welcome-page/co
       return _welcomePage.default;
     }
   });
+});
+define('my-guha-app/controllers/login', ['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = Ember.Controller.extend({
+        session: Ember.inject.service(),
+        firebase: Ember.inject.service('firebaseApp'),
+
+        actions: {
+            iniciarSesion() {
+                let email = this.get('email');
+                if (Ember.isBlank(this.get('email'))) {
+                    Materialize.toast('Introduce tu correo electrónico', 3000);
+                    return;
+                }
+                let password = this.get('password');
+                if (Ember.isBlank(this.get('password'))) {
+                    Materialize.toast('Introduce tu contraseña', 3000);
+                    return;
+                }
+
+                this.get('session').open('firebase', {
+                    provider: 'password',
+                    email: email,
+                    password: password
+                }).then(user => {
+                    this.get('session').fetch().then(() => {
+                        //window.Materialize.toast('Bienvenido', 3000);
+                        this.transitionToRoute('Dashboard');
+                    }).catch(() => {
+                        //window.Materialize.toast('Bienvenido', 3000);
+                        this.transitionToRoute('Dashboard');
+                    });
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        }
+
+    });
 });
 define('my-guha-app/helpers/app-version', ['exports', 'my-guha-app/config/environment', 'ember-cli-app-version/utils/regexp'], function (exports, _environment, _regexp) {
   'use strict';
@@ -123,6 +182,14 @@ define('my-guha-app/initializers/ember-data', ['exports', 'ember-data/setup-cont
     initialize: _setupContainer.default
   };
 });
+define('my-guha-app/initializers/emberfire', ['exports', 'emberfire/initializers/emberfire'], function (exports, _emberfire) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberfire.default;
+});
 define('my-guha-app/initializers/export-application-global', ['exports', 'my-guha-app/config/environment'], function (exports, _environment) {
   'use strict';
 
@@ -173,6 +240,80 @@ define('my-guha-app/initializers/export-application-global', ['exports', 'my-guh
     initialize: initialize
   };
 });
+define('my-guha-app/initializers/initialize-torii-callback', ['exports', 'my-guha-app/config/environment', 'torii/redirect-handler'], function (exports, _environment, _redirectHandler) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = {
+    name: 'torii-callback',
+    before: 'torii',
+    initialize(application) {
+      if (arguments[1]) {
+        // Ember < 2.1
+        application = arguments[1];
+      }
+      if (_environment.default.torii && _environment.default.torii.disableRedirectInitializer) {
+        return;
+      }
+      application.deferReadiness();
+      _redirectHandler.default.handle(window).catch(function () {
+        application.advanceReadiness();
+      });
+    }
+  };
+});
+define('my-guha-app/initializers/initialize-torii-session', ['exports', 'torii/bootstrap/session', 'torii/configuration'], function (exports, _session, _configuration) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = {
+    name: 'torii-session',
+    after: 'torii',
+
+    initialize(application) {
+      if (arguments[1]) {
+        // Ember < 2.1
+        application = arguments[1];
+      }
+      const configuration = (0, _configuration.getConfiguration)();
+      if (!configuration.sessionServiceName) {
+        return;
+      }
+
+      (0, _session.default)(application, configuration.sessionServiceName);
+
+      var sessionFactoryName = 'service:' + configuration.sessionServiceName;
+      application.inject('adapter', configuration.sessionServiceName, sessionFactoryName);
+    }
+  };
+});
+define('my-guha-app/initializers/initialize-torii', ['exports', 'torii/bootstrap/torii', 'torii/configuration', 'my-guha-app/config/environment'], function (exports, _torii, _configuration, _environment) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+  var initializer = {
+    name: 'torii',
+    initialize(application) {
+      if (arguments[1]) {
+        // Ember < 2.1
+        application = arguments[1];
+      }
+      (0, _configuration.configure)(_environment.default.torii || {});
+      (0, _torii.default)(application);
+      application.inject('route', 'torii', 'service:torii');
+    }
+  };
+
+  exports.default = initializer;
+});
 define("my-guha-app/instance-initializers/ember-data", ["exports", "ember-data/initialize-store-service"], function (exports, _initializeStoreService) {
   "use strict";
 
@@ -182,6 +323,56 @@ define("my-guha-app/instance-initializers/ember-data", ["exports", "ember-data/i
   exports.default = {
     name: "ember-data",
     initialize: _initializeStoreService.default
+  };
+});
+define('my-guha-app/instance-initializers/setup-routes', ['exports', 'torii/bootstrap/routing', 'torii/configuration', 'torii/compat/get-router-instance', 'torii/compat/get-router-lib', 'torii/router-dsl-ext'], function (exports, _routing, _configuration, _getRouterInstance, _getRouterLib) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = {
+    name: 'torii-setup-routes',
+    initialize(applicationInstance /*, registry */) {
+      const configuration = (0, _configuration.getConfiguration)();
+
+      if (!configuration.sessionServiceName) {
+        return;
+      }
+
+      let router = (0, _getRouterInstance.default)(applicationInstance);
+      var setupRoutes = function () {
+        let routerLib = (0, _getRouterLib.default)(router);
+        var authenticatedRoutes = routerLib.authenticatedRoutes;
+        var hasAuthenticatedRoutes = !Ember.isEmpty(authenticatedRoutes);
+        if (hasAuthenticatedRoutes) {
+          (0, _routing.default)(applicationInstance, authenticatedRoutes);
+        }
+        router.off('willTransition', setupRoutes);
+      };
+      router.on('willTransition', setupRoutes);
+    }
+  };
+});
+define('my-guha-app/instance-initializers/walk-providers', ['exports', 'torii/lib/container-utils', 'torii/configuration'], function (exports, _containerUtils, _configuration) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = {
+    name: 'torii-walk-providers',
+    initialize(applicationInstance) {
+      let configuration = (0, _configuration.getConfiguration)();
+      // Walk all configured providers and eagerly instantiate
+      // them. This gives providers with initialization side effects
+      // like facebook-connect a chance to load up assets.
+      for (var key in configuration.providers) {
+        if (configuration.providers.hasOwnProperty(key)) {
+          (0, _containerUtils.lookup)(applicationInstance, 'torii-provider:' + key);
+        }
+      }
+    }
   };
 });
 define('my-guha-app/resolver', ['exports', 'ember-resolver'], function (exports, _emberResolver) {
@@ -332,6 +523,61 @@ define('my-guha-app/services/ajax', ['exports', 'ember-ajax/services/ajax'], fun
     }
   });
 });
+define('my-guha-app/services/firebase-app', ['exports', 'emberfire/services/firebase-app'], function (exports, _firebaseApp) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _firebaseApp.default;
+});
+define('my-guha-app/services/firebase', ['exports', 'emberfire/services/firebase'], function (exports, _firebase) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _firebase.default;
+});
+define('my-guha-app/services/popup', ['exports', 'torii/services/popup'], function (exports, _popup) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _popup.default;
+    }
+  });
+});
+define('my-guha-app/services/torii-session', ['exports', 'torii/services/torii-session'], function (exports, _toriiSession) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _toriiSession.default;
+    }
+  });
+});
+define('my-guha-app/services/torii', ['exports', 'torii/services/torii'], function (exports, _torii) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _torii.default;
+    }
+  });
+});
 define("my-guha-app/templates/application", ["exports"], function (exports) {
   "use strict";
 
@@ -386,7 +632,7 @@ define("my-guha-app/templates/login", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "ULQRlRmb", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"body\"],[9,\"style\",\"background-color:#bfe2f5;\"],[7],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \"],[6,\"form\"],[9,\"class\",\"col s12\"],[7],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[6,\"input\"],[9,\"disabled\",\"\"],[9,\"id\",\"first_name\"],[9,\"type\",\"text\"],[9,\"class\",\"validate\"],[7],[8],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"first_name\"],[7],[0,\"Usuario\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[6,\"input\"],[9,\"disabled\",\"\"],[9,\"id\",\"password\"],[9,\"type\",\"password\"],[9,\"class\",\"validate\"],[7],[8],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"password\"],[7],[0,\"Contraseña\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \\n\"],[4,\"link-to\",[\"Dashboard\"],[[\"class\"],[\"waves-effect waves-light btn light-blue darken-2\"]],{\"statements\":[[0,\"                \"],[6,\"i\"],[9,\"class\",\"material-icons right\"],[7],[0,\"send\"],[8],[0,\"\\n                Iniciar Sesión\\n\"]],\"parameters\":[]},null],[0,\"        \"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/login.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "fEzGGjRA", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"body\"],[9,\"style\",\"background-color:#bfe2f5;\"],[7],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \"],[6,\"form\"],[9,\"class\",\"col s12\"],[7],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"placeholder\",\"id\",\"type\",\"class\",\"value\"],[\"user@example.com\",\"email\",\"email\",\"validate\",[20,[\"email\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"email\"],[7],[0,\"Correo Electrónico\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"placeholder\",\"id\",\"type\",\"class\",\"value\"],[\"secret\",\"password\",\"password\",\"validate\",[20,[\"password\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"password\"],[7],[0,\"Contraseña\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \\n            \"],[6,\"button\"],[9,\"class\",\"btn waves-effect waves-light light-blue darken-2\"],[3,\"action\",[[19,0,[]],\"iniciarSesion\"]],[7],[0,\" \\n                Iniciar Sesión\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/login.hbs" } });
 });
 define("my-guha-app/templates/nueva-emergencia", ["exports"], function (exports) {
   "use strict";
@@ -436,6 +682,22 @@ define("my-guha-app/templates/status", ["exports"], function (exports) {
   });
   exports.default = Ember.HTMLBars.template({ "id": "Lnwr50hC", "block": "{\"symbols\":[],\"statements\":[[1,[18,\"outlet\"],false]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/status.hbs" } });
 });
+define('my-guha-app/torii-adapters/application', ['exports', 'emberfire/torii-adapters/firebase'], function (exports, _firebase) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _firebase.default.extend({});
+});
+define('my-guha-app/torii-providers/firebase', ['exports', 'emberfire/torii-providers/firebase'], function (exports, _firebase) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _firebase.default;
+});
 
 define('my-guha-app/config/environment', [], function() {
   var prefix = 'my-guha-app';
@@ -457,6 +719,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+089b3c44"});
+  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+65088b16"});
 }
 //# sourceMappingURL=my-guha-app.map
