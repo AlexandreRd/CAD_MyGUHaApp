@@ -9,12 +9,12 @@ export default Controller.extend({
         iniciarSesion(){
             let email = this.get('email');
             if (isBlank( this.get('email') ) ){
-                Materialize.toast('Introduce tu correo electrónico', 3000);
+                //Materialize.toast('Introduce tu correo electrónico', 3000);
 				return;
 			}
             let password = this.get('password');
             if (isBlank( this.get('password') ) ){
-                Materialize.toast('Introduce tu contraseña', 3000);
+                //Materialize.toast('Introduce tu contraseña', 3000);
 				return;
 			}
 
@@ -22,7 +22,7 @@ export default Controller.extend({
                 provider: 'password',
                 email: email,
                 password: password
-            }).then((user)=> {
+            }).then(()=> {
                 this.get('session').fetch().then(()=>{
                     //window.Materialize.toast('Bienvenido', 3000);
                     this.transitionToRoute('Dashboard');

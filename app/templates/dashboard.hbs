@@ -1,6 +1,14 @@
 {{!--outlet--}}
 
-<body style="background-color:#bfe2f5;">
+<div class="row">
+    <form class="col s12">
+        <div class="row">
+            <button {{action 'cerrarSesion'}} class="btn waves-effect waves-light light-blue darken-2"> 
+                Cerrar Sesión
+            </button>
+        </div>
+    </form>
+</div>
 
 <div class="collection">
     <a href="#!" class="collection-item"><span class="badge">Username</span>Status</a>
@@ -21,5 +29,3 @@
         Solicitudes
     {{/link-to}}
 </div>
-
-</body>
