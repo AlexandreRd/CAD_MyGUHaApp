@@ -5,8 +5,10 @@ module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'my-guha-app',
     environment,
-    rootURL: '/',
-    locationType: 'auto',
+     rootURL: '',
+    // rootURL: '/',
+     locationType: 'hash',
+    //locationType: 'auto',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -30,6 +32,15 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.firebase = {
+        apiKey: "AIzaSyDNV7q3RR-HJVOxTzZS3BncIjegf79o62M",
+        authDomain: "myguhaapp.firebaseapp.com",
+        databaseURL: "https://myguhaapp.firebaseio.com",
+        projectId: "myguhaapp",
+        storageBucket: "myguhaapp.appspot.com",
+        messagingSenderId: "298532106929"
+      
+    }
   }
 
   if (environment === 'test') {

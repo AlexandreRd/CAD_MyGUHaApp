@@ -1,0 +1,4 @@
+#Tue Mar 06 09:36:48 CST 2018
+base.0=C\:\\Users\\Alejandro\\Desktop\\CAD\\MyGUHaApp\\corber\\cordova\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+renamed.0=classes.dex
+file.0=C\:\\Users\\Alejandro\\Desktop\\CAD\\MyGUHaApp\\corber\\cordova\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex

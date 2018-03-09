@@ -1,0 +1,44 @@
+{{outlet}}
+
+<div class="row">
+    <form class="col s12">
+        <div class="row">
+            <div class="col s12">
+            Título:
+                <div class="input-field inline">
+                    <input id="email" type="email" class="validate">
+                    <label for="email" data-error="wrong" data-success="right">Nuevo Aviso</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label>Tipo de aviso</label>
+            <select class="browser-default">
+                <option value="" disabled selected>Seleccionar</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
+        </div>
+
+        <!--input type="text" class="datepicker"-->
+
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="textarea1" class="materialize-textarea"></textarea>
+                <label for="textarea1">Descripcion</label>
+            </div>
+        </div>
+
+        <div class="row">
+            {{#link-to "Avisos" class="waves-effect waves-light btn light-blue darken-2"}}
+                <i class="material-icons right">cloud</i>Publicar
+            {{/link-to}}
+        </div>
+
+    </form>
+  </div>
+
+   
+        
