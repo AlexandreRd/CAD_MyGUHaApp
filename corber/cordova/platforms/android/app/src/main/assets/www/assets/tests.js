@@ -15,9 +15,14 @@ define('my-guha-app/tests/app.lint-test', [], function () {
     assert.ok(true, 'app.js should pass ESLint\n\n');
   });
 
+  QUnit.test('controllers/dashboard.js', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'controllers/dashboard.js should pass ESLint\n\n4:14 - Use import { inject } from \'@ember/service\'; instead of using Ember.inject.service (ember/new-module-imports)\n4:14 - \'Ember\' is not defined. (no-undef)');
+  });
+
   QUnit.test('controllers/login.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/login.js should pass ESLint\n\n5:14 - Use import { inject } from \'@ember/service\'; instead of using Ember.inject.service (ember/new-module-imports)\n5:14 - \'Ember\' is not defined. (no-undef)\n6:15 - Use import { inject } from \'@ember/service\'; instead of using Ember.inject.service (ember/new-module-imports)\n6:15 - \'Ember\' is not defined. (no-undef)\n12:17 - \'Materialize\' is not defined. (no-undef)\n17:17 - \'Materialize\' is not defined. (no-undef)\n25:22 - \'user\' is defined but never used. (no-unused-vars)\n35:17 - Unexpected console statement. (no-console)');
+    assert.ok(false, 'controllers/login.js should pass ESLint\n\n5:14 - Use import { inject } from \'@ember/service\'; instead of using Ember.inject.service (ember/new-module-imports)\n5:14 - \'Ember\' is not defined. (no-undef)\n6:15 - Use import { inject } from \'@ember/service\'; instead of using Ember.inject.service (ember/new-module-imports)\n6:15 - \'Ember\' is not defined. (no-undef)\n35:17 - Unexpected console statement. (no-console)');
   });
 
   QUnit.test('resolver.js', function (assert) {
@@ -406,6 +411,11 @@ define('my-guha-app/tests/tests.lint-test', [], function () {
     assert.ok(true, 'test-helper.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/controllers/dashboard-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/dashboard-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/controllers/login-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/login-test.js should pass ESLint\n\n');
@@ -469,6 +479,19 @@ define('my-guha-app/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/status-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/status-test.js should pass ESLint\n\n');
+  });
+});
+define('my-guha-app/tests/unit/controllers/dashboard-test', ['qunit', 'ember-qunit'], function (_qunit, _emberQunit) {
+  'use strict';
+
+  (0, _qunit.module)('Unit | Controller | dashboard', function (hooks) {
+    (0, _emberQunit.setupTest)(hooks);
+
+    // Replace this with your real tests.
+    (0, _qunit.test)('it exists', function (assert) {
+      let controller = this.owner.lookup('controller:dashboard');
+      assert.ok(controller);
+    });
   });
 });
 define('my-guha-app/tests/unit/controllers/login-test', ['qunit', 'ember-qunit'], function (_qunit, _emberQunit) {

@@ -47,6 +47,23 @@ define('my-guha-app/components/welcome-page', ['exports', 'ember-welcome-page/co
     }
   });
 });
+define('my-guha-app/controllers/dashboard', ['exports'], function (exports) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = Ember.Controller.extend({
+        session: Ember.inject.service(),
+
+        actions: {
+            cerrarSesion: function () {
+                this.get('session').close();
+                this.transitionToRoute('Login');
+            }
+        }
+    });
+});
 define('my-guha-app/controllers/login', ['exports'], function (exports) {
     'use strict';
 
@@ -61,12 +78,12 @@ define('my-guha-app/controllers/login', ['exports'], function (exports) {
             iniciarSesion() {
                 let email = this.get('email');
                 if (Ember.isBlank(this.get('email'))) {
-                    Materialize.toast('Introduce tu correo electrónico', 3000);
+                    //Materialize.toast('Introduce tu correo electrónico', 3000);
                     return;
                 }
                 let password = this.get('password');
                 if (Ember.isBlank(this.get('password'))) {
-                    Materialize.toast('Introduce tu contraseña', 3000);
+                    //Materialize.toast('Introduce tu contraseña', 3000);
                     return;
                 }
 
@@ -74,7 +91,7 @@ define('my-guha-app/controllers/login', ['exports'], function (exports) {
                     provider: 'password',
                     email: email,
                     password: password
-                }).then(user => {
+                }).then(() => {
                     this.get('session').fetch().then(() => {
                         //window.Materialize.toast('Bienvenido', 3000);
                         this.transitionToRoute('Dashboard');
@@ -608,7 +625,7 @@ define("my-guha-app/templates/dashboard", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "aZ5D/rXQ", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"body\"],[9,\"style\",\"background-color:#bfe2f5;\"],[7],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"collection\"],[7],[0,\"\\n    \"],[6,\"a\"],[9,\"href\",\"#!\"],[9,\"class\",\"collection-item\"],[7],[6,\"span\"],[9,\"class\",\"badge\"],[7],[0,\"Username\"],[8],[0,\"Status\"],[8],[0,\"\\n\"],[4,\"link-to\",[\"Avisos\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"3\"],[8],[0,\"\\n        Avisos\\n\"]],\"parameters\":[]},null],[4,\"link-to\",[\"Emergencias\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"1\"],[8],[0,\"\\n        Emergencias\\n\"]],\"parameters\":[]},null],[4,\"link-to\",[\"Encuestas\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"2\"],[8],[0,\"\\n        Encuestas\\n\"]],\"parameters\":[]},null],[4,\"link-to\",null,[[\"href\",\"class\"],[\"Solicitudes\",\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"1\"],[8],[0,\"\\n        Solicitudes\\n\"]],\"parameters\":[]},null],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/dashboard.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "MQ+IcI+1", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \"],[6,\"form\"],[9,\"class\",\"col s12\"],[7],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"button\"],[9,\"class\",\"btn waves-effect waves-light light-blue darken-2\"],[3,\"action\",[[19,0,[]],\"cerrarSesion\"]],[7],[0,\" \\n                Cerrar Sesión\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"collection\"],[7],[0,\"\\n    \"],[6,\"a\"],[9,\"href\",\"#!\"],[9,\"class\",\"collection-item\"],[7],[6,\"span\"],[9,\"class\",\"badge\"],[7],[0,\"Username\"],[8],[0,\"Status\"],[8],[0,\"\\n\"],[4,\"link-to\",[\"Avisos\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"3\"],[8],[0,\"\\n        Avisos\\n\"]],\"parameters\":[]},null],[4,\"link-to\",[\"Emergencias\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"1\"],[8],[0,\"\\n        Emergencias\\n\"]],\"parameters\":[]},null],[4,\"link-to\",[\"Encuestas\"],[[\"class\"],[\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"2\"],[8],[0,\"\\n        Encuestas\\n\"]],\"parameters\":[]},null],[4,\"link-to\",null,[[\"href\",\"class\"],[\"Solicitudes\",\"collection-item\"]],{\"statements\":[[0,\"        \"],[6,\"span\"],[9,\"class\",\"new badge light-blue darken-2\"],[7],[0,\"1\"],[8],[0,\"\\n        Solicitudes\\n\"]],\"parameters\":[]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/dashboard.hbs" } });
 });
 define("my-guha-app/templates/emergencias", ["exports"], function (exports) {
   "use strict";
@@ -632,7 +649,7 @@ define("my-guha-app/templates/login", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "fEzGGjRA", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"body\"],[9,\"style\",\"background-color:#bfe2f5;\"],[7],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \"],[6,\"form\"],[9,\"class\",\"col s12\"],[7],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"placeholder\",\"id\",\"type\",\"class\",\"value\"],[\"user@example.com\",\"email\",\"email\",\"validate\",[20,[\"email\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"email\"],[7],[0,\"Correo Electrónico\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"placeholder\",\"id\",\"type\",\"class\",\"value\"],[\"secret\",\"password\",\"password\",\"validate\",[20,[\"password\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"password\"],[7],[0,\"Contraseña\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \\n            \"],[6,\"button\"],[9,\"class\",\"btn waves-effect waves-light light-blue darken-2\"],[3,\"action\",[[19,0,[]],\"iniciarSesion\"]],[7],[0,\" \\n                Iniciar Sesión\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/login.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "Hj7d7tjy", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"body\"],[9,\"style\",\"background-color:#bfe2f5;\"],[7],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \"],[6,\"form\"],[9,\"class\",\"col s12\"],[7],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"id\",\"type\",\"class\",\"value\"],[\"email\",\"email\",\"validate\",[20,[\"email\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"email\"],[7],[0,\"Correo Electrónico\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"input-field col s12\"],[7],[0,\"\\n                \"],[1,[25,\"input\",null,[[\"placeholder\",\"id\",\"type\",\"class\",\"value\"],[\"secret\",\"password\",\"password\",\"validate\",[20,[\"password\"]]]]],false],[0,\"\\n                \"],[6,\"label\"],[9,\"for\",\"password\"],[7],[0,\"Contraseña\"],[8],[0,\"\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n            \\n            \"],[6,\"button\"],[9,\"class\",\"btn waves-effect waves-light light-blue darken-2\"],[3,\"action\",[[19,0,[]],\"iniciarSesion\"]],[7],[0,\" \\n                Iniciar Sesión\\n            \"],[8],[0,\"\\n        \"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "my-guha-app/templates/login.hbs" } });
 });
 define("my-guha-app/templates/nueva-emergencia", ["exports"], function (exports) {
   "use strict";
@@ -719,6 +736,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+65088b16"});
+  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+35da9704"});
 }
 //# sourceMappingURL=my-guha-app.map
