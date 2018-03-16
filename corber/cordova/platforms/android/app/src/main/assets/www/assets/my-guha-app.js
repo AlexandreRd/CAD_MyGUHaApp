@@ -736,6 +736,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+35da9704"});
+  require("my-guha-app/app")["default"].create({"name":"my-guha-app","version":"0.0.0+c3639a40"});
 }
 //# sourceMappingURL=my-guha-app.map
